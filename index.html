@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Practice Generator</title>
+  <title>Practice Generator - Basse</title>
   <style>
     :root{
       --bg1:#0b1020;
@@ -89,6 +89,22 @@
       margin-top:10px;
       font-size:14px;
     }
+    .instructions-list {
+      text-align: left;
+      margin: 15px 0 0 0;
+      padding-left: 20px;
+      list-style-type: none;
+    }
+    .instructions-list li {
+      margin-bottom: 10px;
+      font-size: 15px;
+      line-height: 1.4;
+      color: rgba(255,255,255,0.85);
+    }
+    .instructions-list b {
+      color: #fff;
+      margin-right: 8px;
+    }
     .buttons{
       display:flex;
       gap:10px;
@@ -109,7 +125,6 @@
     }
     button:hover{ background:rgba(255,255,255,.10); }
     button:active{ transform: translateY(1px); }
-
     .pillrow{
       display:flex;
       gap:10px;
@@ -125,7 +140,6 @@
       font-size:13px;
       color:rgba(255,255,255,.8);
     }
-
     .settingsHeader{
       display:flex;
       align-items:center;
@@ -181,289 +195,4 @@
       grid-column: span 4;
     }
     .fieldWide{
-      grid-column: span 12;
-      justify-content:flex-start;
-      gap:10px;
-    }
-    .footer{
-      text-align:center;
-      color:rgba(255,255,255,.55);
-      font-size:12px;
-      padding-top:2px;
-    }
-
-    @media (max-width: 720px){
-      .field{ grid-column: span 12; }
-      button{ min-width: 140px; }
-      .hint{ text-align:left; }
-    }
-
-    .hidden{ display:none; }
-  </style>
-</head>
-<body>
-  <div class="app">
-
-    <div class="card top">
-      <h1>🎵 Practice Generator</h1>
-      <div class="hint">
-        <div><b>Espace/Entrée</b> : nouvel exercice</div>
-        <div><b>F</b> : plein écran • <b>C</b> : copier • <b>S</b> : réglages</div>
-      </div>
-    </div>
-
-    <div class="card center">
-      <div class="label">Tonalité</div>
-      <div class="key" id="key">—</div>
-
-      <div class="label" style="margin-top:18px;">Progression</div>
-      <div class="prog" id="prog">—</div>
-
-      <div class="sub" id="sub">Appuie sur “Nouvel exercice”</div>
-
-      <div class="buttons">
-        <button id="next">Nouvel exercice</button>
-        <button id="copy">Copier</button>
-        <button id="fs">Plein écran</button>
-        <button id="toggle">Réglages</button>
-        <div class="label">Test</div>
-      </div>
-
-      <div class="pillrow" id="pills"></div>
-    </div>
-
-    <div class="card" id="settingsCard">
-      <div class="settingsHeader">
-        <h2>Réglages</h2>
-        <div class="hint">Tu peux tout simplifier / complexifier selon ta pratique.</div>
-      </div>
-
-      <div class="settings">
-        <div class="grid">
-          <div class="field">
-            <span>Qualité</span>
-            <select id="quality">
-              <option value="both">Majeur + mineur</option>
-              <option value="major">Majeur seulement</option>
-              <option value="minor">Mineur seulement</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <span>Accidentels</span>
-            <select id="acc">
-              <option value="both">♭ + ♯</option>
-              <option value="flats">♭ seulement</option>
-              <option value="sharps">♯ seulement</option>
-            </select>
-          </div>
-
-          <div class="field fieldSmall">
-            <span>Style</span>
-            <select id="style">
-              <option value="mixed">Mix</option>
-              <option value="pop">Pop</option>
-              <option value="jazz">Jazz</option>
-              <option value="minor">Mineur</option>
-              <option value="classic">Classique</option>
-            </select>
-          </div>
-
-          <div class="field fieldSmall">
-            <span>Longueur</span>
-            <select id="len">
-              <option value="any">Auto</option>
-              <option value="3">3 accords</option>
-              <option value="4">4 accords</option>
-            </select>
-          </div>
-
-          <div class="field fieldSmall">
-            <span>Afficher tags</span>
-            <input id="tags" type="checkbox" checked />
-          </div>
-
-          <div class="field fieldWide">
-            <input id="avoidHard" type="checkbox" />
-            <span>Éviter les tonalités “reloues” (Cb, C#, Fb, E#, B#)</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer">Astuce : mets cette page en favori. Elle marche hors ligne.</div>
-  </div>
-
-<script>
-  // --- Données ---
-  const KEYS_FLATS  = ["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B","Cb","Fb"];
-  const KEYS_SHARPS = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B","E#","B#"];
-
-  const PROG = {
-    pop: [
-      { name:"Pop", rn:["I","V","vi","IV"] },
-      { name:"Pop 2", rn:["I","vi","IV","V"] },
-      { name:"3-chords", rn:["I","IV","V"] },
-      { name:"50s", rn:["I","vi","ii","V"] },
-    ],
-    jazz: [
-      { name:"Turnaround", rn:["ii","V","I"] },
-      { name:"Turnaround 4", rn:["I","vi","ii","V"] },
-      { name:"Rhythm changes (A)", rn:["I","vi","ii","V"] },
-      { name:"Backdoor", rn:["IV","iv","I"] },
-    ],
-    minor: [
-      { name:"Natural minor", rn:["i","VI","III","VII"] },
-      { name:"Cadence", rn:["i","iv","V"] },
-      { name:"Andalusian", rn:["i","VII","VI","V"] },
-      { name:"Minor pop", rn:["i","VI","iv","V"] },
-    ],
-    classic: [
-      { name:"Cadence", rn:["I","IV","V","I"] },
-      { name:"Circle", rn:["I","IV","vii°","iii"] },
-      { name:"Circle 2", rn:["vi","ii","V","I"] },
-      { name:"Plagal", rn:["IV","I"] },
-    ],
-  };
-
-  const pick = (arr) => arr[Math.floor(Math.random()*arr.length)];
-
-  const pretty = (k) => k.replace("b","♭").replace("#","♯");
-
-  function getKeyPool() {
-    const acc = document.getElementById("acc").value;
-    const avoidHard = document.getElementById("avoidHard").checked;
-
-    let pool = [];
-    if (acc === "flats") pool = [...KEYS_FLATS];
-    else if (acc === "sharps") pool = [...KEYS_SHARPS];
-    else pool = [...new Set([...KEYS_FLATS, ...KEYS_SHARPS])];
-
-    if (avoidHard) {
-      const hard = new Set(["Cb","C#","Fb","E#","B#"]);
-      pool = pool.filter(k => !hard.has(k));
-    }
-    return pool;
-  }
-
-  function getQuality() {
-    const q = document.getElementById("quality").value;
-    if (q === "major") return "major";
-    if (q === "minor") return "minor";
-    return pick(["major","minor"]);
-  }
-
-  function getProgPool() {
-    const style = document.getElementById("style").value;
-    if (style === "mixed") {
-      return [...PROG.pop, ...PROG.jazz, ...PROG.minor, ...PROG.classic];
-    }
-    return PROG[style] || [...PROG.pop];
-  }
-
-  function filterByLength(prog, lenPref) {
-    if (lenPref === "any") return prog;
-    const n = Number(lenPref);
-    const filtered = prog.filter(p => p.rn.length === n);
-    return filtered.length ? filtered : prog;
-  }
-
-  let current = null;
-
-  function renderPills(items){
-    const show = document.getElementById("tags").checked;
-    const el = document.getElementById("pills");
-    if (!show || !items?.length) {
-      el.innerHTML = "";
-      return;
-    }
-    el.innerHTML = items.map(t => `<div class="pill">${t}</div>`).join("");
-  }
-
-  function generate(){
-    const key = pick(getKeyPool());
-    const quality = getQuality();
-
-    let pool = getProgPool();
-    pool = filterByLength(pool, document.getElementById("len").value);
-    const prog = pick(pool);
-
-    const keyLabel = `${pretty(key)} ${quality}`;
-    const progLabel = `${prog.name}: ${prog.rn.join(" – ")}`;
-
-    current = { keyLabel, progLabel, progName: prog.name, rn: prog.rn };
-
-    document.getElementById("key").textContent = keyLabel;
-    document.getElementById("prog").textContent = prog.rn.join(" – ");
-    document.getElementById("sub").textContent = prog.name;
-
-    renderPills([
-      document.getElementById("style").value === "mixed" ? "mix" : document.getElementById("style").value,
-      document.getElementById("quality").value,
-      document.getElementById("acc").value
-    ]);
-  }
-
-  async function copyCurrent(){
-    if (!current) generate();
-    const text = `Tonalité: ${current.keyLabel}\nProgression: ${current.progLabel}`;
-    try{
-      await navigator.clipboard.writeText(text);
-      flashSubtitle("Copié ✅");
-    } catch {
-      prompt("Copie manuelle:", text);
-    }
-  }
-
-  function flashSubtitle(msg){
-    const el = document.getElementById("sub");
-    const old = el.textContent;
-    el.textContent = msg;
-    setTimeout(() => el.textContent = old, 800);
-  }
-
-  async function toggleFullscreen(){
-    if (!document.fullscreenElement) {
-      try { await document.documentElement.requestFullscreen(); }
-      catch { /* ignore */ }
-    } else {
-      try { await document.exitFullscreen(); }
-      catch { /* ignore */ }
-    }
-  }
-
-  function toggleSettings(){
-    document.getElementById("settingsCard").classList.toggle("hidden");
-  }
-
-  // --- Events ---
-  document.getElementById("next").addEventListener("click", generate);
-  document.getElementById("copy").addEventListener("click", copyCurrent);
-  document.getElementById("fs").addEventListener("click", toggleFullscreen);
-  document.getElementById("toggle").addEventListener("click", toggleSettings);
-
-  // Regénérer quand tu changes un réglage
-  ["quality","acc","style","len","tags","avoidHard"].forEach(id => {
-    document.getElementById(id).addEventListener("change", () => {
-      generate();
-    });
-  });
-
-  // Raccourcis clavier
-  window.addEventListener("keydown", (e) => {
-    const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : "";
-    if (tag === "select" || tag === "input" || tag === "textarea") return;
-
-    if (e.key === " " || e.key === "Enter") { e.preventDefault(); generate(); }
-    else if (e.key.toLowerCase() === "f") { toggleFullscreen(); }
-    else if (e.key.toLowerCase() === "c") { copyCurrent(); }
-    else if (e.key.toLowerCase() === "s") { toggleSettings(); }
-  });
-
-  // Démarrage
-  generate();
-</script>
-</body>
-
-</html>
-
+      grid-column: span 1
