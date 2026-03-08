@@ -1,260 +1,303 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Basse Practice - Generator</title>
-  <style>
-    :root{
-      --bg1:#0b1020;
-      --bg2:#121a34;
-      --card:rgba(255,255,255,.08);
-      --border:rgba(255,255,255,.14);
-      --text:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.65);
-      --shadow:0 18px 50px rgba(0,0,0,.35);
-      --radius:22px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      color:var(--text);
-      min-height:100vh;
-      background: radial-gradient(1200px 600px at 30% 20%, #26356b 0%, transparent 60%),
-                  radial-gradient(900px 500px at 70% 70%, #4b2a6d 0%, transparent 55%),
-                  linear-gradient(160deg, var(--bg1), var(--bg2));
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding:18px;
-    }
-    .app{
-      width:min(920px, 96vw);
-      display:grid;
-      gap:14px;
-    }
-    .card{
-      background:var(--card);
-      border:1px solid var(--border);
-      box-shadow:var(--shadow);
-      border-radius:var(--radius);
-      padding:22px;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-    .top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-    h1{
-      margin:0;
-      font-weight:800;
-      letter-spacing:.3px;
-      font-size:20px;
-      color:rgba(255,255,255,.9);
-    }
-    .hint{
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.25;
-      text-align:right;
-    }
-    .center{
-      text-align:center;
-      padding:26px 18px 18px;
-    }
-    .label{
-      color:var(--muted);
-      font-size:14px;
-      letter-spacing:.6px;
-      text-transform:uppercase;
-      font-weight: 600;
-    }
-    .key{
-      font-size: clamp(40px, 6vw, 74px);
-      font-weight:900;
-      margin:10px 0 6px;
-      letter-spacing:.5px;
-      color: #fff;
-    }
-    .prog{
-      font-size: clamp(22px, 3.1vw, 40px);
-      font-weight:800;
-      margin:8px 0 6px;
-      color: #fff;
-    }
-    .sub{
-      color:var(--muted);
-      margin-top:10px;
-      font-size:15px;
-    }
-    .instructions {
-      text-align: left;
-      margin-top: 20px;
-      border-top: 1px solid var(--border);
-      padding-top: 20px;
-    }
-    .instructions-list {
-      margin: 10px 0 0 0;
-      padding-left: 0;
-      list-style: none;
-    }
-    .instructions-list li {
-      margin-bottom: 12px;
-      font-size: 15px;
-      line-height: 1.4;
-      display: flex;
-      gap: 12px;
-    }
-    .instructions-list b {
-      color: #fff;
-      background: rgba(255,255,255,0.1);
-      padding: 0px 8px;
-      border-radius: 6px;
-      height: fit-content;
-    }
-    .buttons{
-      display:flex;
-      gap:10px;
-      justify-content:center;
-      flex-wrap:wrap;
-      margin-top:20px;
-      margin-bottom: 15px;
-    }
-    button{
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      border-radius:14px;
-      padding:11px 18px;
-      font-size:15px;
-      cursor:pointer;
-      transition: all .15s ease;
-      min-width: 140px;
-    }
-    button:hover{ background:rgba(255,255,255,.12); border-color: rgba(255,255,255,.3); }
-    button:active{ transform: scale(0.98); }
-    .pillrow{
-      display:flex;
-      gap:8px;
-      justify-content:center;
-      flex-wrap:wrap;
-    }
-    .pill{
-      border:1px solid var(--border);
-      background:rgba(0,0,0,.18);
-      padding:6px 12px;
-      border-radius:999px;
-      font-size:12px;
-      color:rgba(255,255,255,.7);
-    }
-    .settingsHeader h2{
-      margin:0; font-size:14px; text-transform:uppercase; color:rgba(255,255,255,.75);
-    }
-    .settings{ display:grid; gap:12px; margin-top:12px; }
-    .grid{ display:grid; gap:10px; grid-template-columns: repeat(12, 1fr); }
-    .field{
-      grid-column: span 6;
-      display:flex; gap:8px; align-items:center; justify-content:space-between;
-      padding:10px 12px; border:1px solid var(--border);
-      background:rgba(255,255,255,.05); border-radius:16px;
-    }
-    .field span{ color:rgba(255,255,255,.8); font-size:14px; }
-    select, input[type="checkbox"]{ accent-color: white; }
-    select{
-      background:rgba(0,0,0,0.3); color:var(--text); border:1px solid var(--border);
-      border-radius:10px; padding:6px; outline:none;
-    }
-    .fieldSmall{ grid-column: span 4; }
-    .fieldWide{ grid-column: span 12; justify-content:flex-start; gap:10px; }
-    .footer{ text-align:center; color:rgba(255,255,255,.4); font-size:12px; }
-    .hidden{ display:none; }
-    @media (max-width: 720px){
-      .field{ grid-column: span 12; }
-      .hint{ text-align:left; }
-    }
-  </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Bass Practice Generator</title>
+
+<style>
+:root{
+--bg1:#0b1020;
+--bg2:#121a34;
+--card:rgba(255,255,255,.08);
+--border:rgba(255,255,255,.14);
+--text:rgba(255,255,255,.92);
+--muted:rgba(255,255,255,.65);
+--shadow:0 18px 50px rgba(0,0,0,.35);
+--radius:22px;
+}
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+color:var(--text);
+min-height:100vh;
+background: radial-gradient(1200px 600px at 30% 20%, #26356b 0%, transparent 60%),
+radial-gradient(900px 500px at 70% 70%, #4b2a6d 0%, transparent 55%),
+linear-gradient(160deg, var(--bg1), var(--bg2));
+display:flex;
+justify-content:center;
+align-items:center;
+padding:18px;
+}
+
+.app{
+width:min(920px,96vw);
+display:grid;
+gap:14px;
+}
+
+.card{
+background:var(--card);
+border:1px solid var(--border);
+box-shadow:var(--shadow);
+border-radius:var(--radius);
+padding:22px;
+backdrop-filter:blur(10px);
+}
+
+.top{
+display:flex;
+align-items:center;
+justify-content:space-between;
+flex-wrap:wrap;
+}
+
+h1{
+margin:0;
+font-weight:800;
+font-size:20px;
+}
+
+.center{
+text-align:center;
+padding:26px 18px;
+}
+
+.label{
+color:var(--muted);
+font-size:14px;
+text-transform:uppercase;
+}
+
+.key{
+font-size:clamp(40px,6vw,74px);
+font-weight:900;
+margin:10px 0;
+}
+
+.prog{
+font-size:clamp(22px,3vw,40px);
+font-weight:800;
+}
+
+.sub{
+color:var(--muted);
+margin-top:8px;
+}
+
+.buttons{
+display:flex;
+gap:10px;
+justify-content:center;
+flex-wrap:wrap;
+margin-top:14px;
+}
+
+button{
+border:1px solid var(--border);
+background:rgba(255,255,255,.06);
+color:var(--text);
+border-radius:14px;
+padding:11px 14px;
+font-size:15px;
+cursor:pointer;
+min-width:150px;
+}
+
+button:hover{background:rgba(255,255,255,.10);}
+
+.instructions{
+margin-top:20px;
+text-align:left;
+font-size:14px;
+line-height:1.6;
+color:rgba(255,255,255,.85);
+}
+
+.instructions ol{
+margin-top:6px;
+padding-left:18px;
+}
+
+.settings{
+margin-top:14px;
+}
+
+.footer{
+text-align:center;
+color:rgba(255,255,255,.55);
+font-size:12px;
+}
+
+.hidden{
+display:none;
+}
+</style>
 </head>
+
 <body>
-  <div class="app">
-    <div class="card top">
-      <h1>🎵 Bass Practice</h1>
-      <div class="hint">
-        <div><b>Espace</b> : Nouveau • <b>F</b> : Plein écran</div>
-        <div><b>S</b> : Réglages</div>
-      </div>
-    </div>
 
-    <div class="card center">
-      <div class="label">Tonalité</div>
-      <div class="key" id="key">—</div>
-      
-      <div class="label" style="margin-top:18px;">Progression</div>
-      <div class="prog" id="prog">—</div>
-      <div class="sub" id="sub">Clique sur "Nouvel exercice" pour commencer</div>
+<div class="app">
 
-      <div class="buttons">
-        <button id="next">Nouvel exercice</button>
-        <button id="toggle">Réglages</button>
-        <button id="fs">Plein écran</button>
-      </div>
+<div class="card top">
+<h1>🎸 Bass Practice Generator</h1>
+<div style="font-size:13px;color:var(--muted)">
+Espace / Entrée = nouvel exercice
+</div>
+</div>
 
-      <div class="pillrow" id="pills"></div>
+<div class="card center">
 
-      <div class="instructions">
-        <div class="label">Consignes de pratique</div>
-        <ul class="instructions-list">
-          <li><b>A</b> <span>Trouver toutes les positions de la tonique sur le manche.</span></li>
-          <li><b>B</b> <span>Dire à voix haute chaque note de la gamme.</span></li>
-          <li><b>C</b> <span>Jouer les triades des accords (selon s'ils sont mineurs ou majeurs).</span></li>
-        </ul>
-      </div>
-    </div>
+<div class="label">Tonalité</div>
+<div class="key" id="key">—</div>
 
-    <div class="card hidden" id="settingsCard">
-      <div class="settingsHeader">
-        <h2>Réglages de l'exercice</h2>
-      </div>
-      <div class="settings">
-        <div class="grid">
-          <div class="field">
-            <span>Qualité</span>
-            <select id="quality">
-              <option value="both">Majeur + mineur</option>
-              <option value="major">Majeur seulement</option>
-              <option value="minor">Mineur seulement</option>
-            </select>
-          </div>
-          <div class="field">
-            <span>Accidentels</span>
-            <select id="acc">
-              <option value="both">♭ + ♯</option>
-              <option value="flats">♭ seulement</option>
-              <option value="sharps">♯ seulement</option>
-            </select>
-          </div>
-          <div class="field fieldSmall">
-            <span>Style</span>
-            <select id="style">
-              <option value="mixed">Mix</option>
-              <option value="pop">Pop</option>
-              <option value="jazz">Jazz</option>
-              <option value="minor">Mineur</option>
-              <option value="classic">Classique</option>
-            </select>
-          </div>
-          <div class="field fieldSmall">
-            <span>Longueur</span>
-            <select id="len">
-              <option value="any">Auto</option>
-              <option value="3">3 accords</option>
-              <option value="4">4 accords</option>
-            </select>
-          </div>
-          <div class="field fieldSmall">
-            <span>Tags</span>
-            <input id="tags" type
+<div class="label">Progression</div>
+<div class="prog" id="prog">—</div>
+
+<div class="sub" id="sub">Appuie sur “Nouvel exercice”</div>
+
+<div class="buttons">
+<button id="next">Nouvel exercice</button>
+<button id="fs">Plein écran</button>
+<button id="toggle">Réglages</button>
+</div>
+
+<div class="instructions">
+
+<b>Instructions de pratique :</b>
+
+<ol>
+<li>Trouver toutes les positions de la <b>tonique</b> sur le manche.</li>
+<li>Dire à voix haute chaque <b>note de la gamme</b>.</li>
+<li>Jouer les <b>triades</b> des accords de la progression selon leur qualité (majeur ou mineur).</li>
+</ol>
+
+</div>
+
+</div>
+
+<div class="card hidden" id="settingsCard">
+
+<b>Réglages</b>
+
+<div class="settings">
+
+<label>
+Qualité
+<select id="quality">
+<option value="both">Majeur + mineur</option>
+<option value="major">Majeur seulement</option>
+<option value="minor">Mineur seulement</option>
+</select>
+</label>
+
+<br><br>
+
+<label>
+Accidentels
+<select id="acc">
+<option value="both">♭ + ♯</option>
+<option value="flats">♭ seulement</option>
+<option value="sharps">♯ seulement</option>
+</select>
+</label>
+
+</div>
+
+</div>
+
+<div class="footer">
+Astuce : mets cette page en favori — elle fonctionne hors ligne.
+</div>
+
+</div>
+
+<script>
+
+const KEYS_FLATS=["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
+const KEYS_SHARPS=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+
+const PROG=[
+{ name:"Pop", rn:["I","V","vi","IV"] },
+{ name:"Pop 2", rn:["I","vi","IV","V"] },
+{ name:"3 chords", rn:["I","IV","V"] },
+{ name:"Turnaround", rn:["ii","V","I"] },
+{ name:"Minor", rn:["i","VI","III","VII"] }
+];
+
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+
+function pretty(k){
+return k.replace("b","♭").replace("#","♯");
+}
+
+function getKeyPool(){
+
+const acc=document.getElementById("acc").value;
+
+if(acc==="flats") return KEYS_FLATS;
+if(acc==="sharps") return KEYS_SHARPS;
+
+return [...new Set([...KEYS_FLATS,...KEYS_SHARPS])];
+}
+
+function getQuality(){
+
+const q=document.getElementById("quality").value;
+
+if(q==="major") return "major";
+if(q==="minor") return "minor";
+
+return pick(["major","minor"]);
+}
+
+function generate(){
+
+const key=pick(getKeyPool());
+const quality=getQuality();
+const prog=pick(PROG);
+
+document.getElementById("key").textContent=`${pretty(key)} ${quality}`;
+document.getElementById("prog").textContent=prog.rn.join(" – ");
+document.getElementById("sub").textContent=prog.name;
+
+}
+
+function toggleSettings(){
+
+document.getElementById("settingsCard").classList.toggle("hidden");
+
+}
+
+async function toggleFullscreen(){
+
+if(!document.fullscreenElement){
+await document.documentElement.requestFullscreen();
+}else{
+await document.exitFullscreen();
+}
+
+}
+
+document.getElementById("next").onclick=generate;
+document.getElementById("toggle").onclick=toggleSettings;
+document.getElementById("fs").onclick=toggleFullscreen;
+
+window.addEventListener("keydown",(e)=>{
+
+if(e.key===" "||e.key==="Enter"){
+e.preventDefault();
+generate();
+}
+
+});
+
+generate();
+
+</script>
+
+</body>
+</html>
