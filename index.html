@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Practice Generator - Basse</title>
+  <title>Basse Practice - Generator</title>
   <style>
     :root{
       --bg1:#0b1020;
@@ -72,127 +72,189 @@
       font-size:14px;
       letter-spacing:.6px;
       text-transform:uppercase;
+      font-weight: 600;
     }
     .key{
       font-size: clamp(40px, 6vw, 74px);
       font-weight:900;
       margin:10px 0 6px;
       letter-spacing:.5px;
+      color: #fff;
     }
     .prog{
       font-size: clamp(22px, 3.1vw, 40px);
       font-weight:800;
       margin:8px 0 6px;
+      color: #fff;
     }
     .sub{
       color:var(--muted);
       margin-top:10px;
-      font-size:14px;
+      font-size:15px;
+    }
+    .instructions {
+      text-align: left;
+      margin-top: 20px;
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
     }
     .instructions-list {
-      text-align: left;
-      margin: 15px 0 0 0;
-      padding-left: 20px;
-      list-style-type: none;
+      margin: 10px 0 0 0;
+      padding-left: 0;
+      list-style: none;
     }
     .instructions-list li {
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       font-size: 15px;
       line-height: 1.4;
-      color: rgba(255,255,255,0.85);
+      display: flex;
+      gap: 12px;
     }
     .instructions-list b {
       color: #fff;
-      margin-right: 8px;
+      background: rgba(255,255,255,0.1);
+      padding: 0px 8px;
+      border-radius: 6px;
+      height: fit-content;
     }
     .buttons{
       display:flex;
       gap:10px;
       justify-content:center;
       flex-wrap:wrap;
-      margin-top:14px;
+      margin-top:20px;
+      margin-bottom: 15px;
     }
     button{
       border:1px solid var(--border);
       background:rgba(255,255,255,.06);
       color:var(--text);
       border-radius:14px;
-      padding:11px 14px;
+      padding:11px 18px;
       font-size:15px;
       cursor:pointer;
-      transition: transform .05s ease, background .15s ease;
-      min-width: 150px;
+      transition: all .15s ease;
+      min-width: 140px;
     }
-    button:hover{ background:rgba(255,255,255,.10); }
-    button:active{ transform: translateY(1px); }
+    button:hover{ background:rgba(255,255,255,.12); border-color: rgba(255,255,255,.3); }
+    button:active{ transform: scale(0.98); }
     .pillrow{
       display:flex;
-      gap:10px;
+      gap:8px;
       justify-content:center;
       flex-wrap:wrap;
-      margin-top:10px;
     }
     .pill{
       border:1px solid var(--border);
       background:rgba(0,0,0,.18);
-      padding:8px 10px;
+      padding:6px 12px;
       border-radius:999px;
-      font-size:13px;
-      color:rgba(255,255,255,.8);
-    }
-    .settingsHeader{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
+      font-size:12px;
+      color:rgba(255,255,255,.7);
     }
     .settingsHeader h2{
-      margin:0;
-      font-size:14px;
-      letter-spacing:.6px;
-      text-transform:uppercase;
-      color:rgba(255,255,255,.75);
+      margin:0; font-size:14px; text-transform:uppercase; color:rgba(255,255,255,.75);
     }
-    .settings{
-      display:grid;
-      gap:12px;
-      margin-top:12px;
-    }
-    .grid{
-      display:grid;
-      gap:10px;
-      grid-template-columns: repeat(12, 1fr);
-    }
+    .settings{ display:grid; gap:12px; margin-top:12px; }
+    .grid{ display:grid; gap:10px; grid-template-columns: repeat(12, 1fr); }
     .field{
       grid-column: span 6;
-      display:flex;
-      gap:8px;
-      align-items:center;
-      justify-content:space-between;
-      padding:10px 12px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.05);
-      border-radius:16px;
+      display:flex; gap:8px; align-items:center; justify-content:space-between;
+      padding:10px 12px; border:1px solid var(--border);
+      background:rgba(255,255,255,.05); border-radius:16px;
     }
-    .field span{
-      color:rgba(255,255,255,.8);
-      font-size:14px;
-    }
-    select, input[type="checkbox"]{
-      accent-color: white;
-    }
+    .field span{ color:rgba(255,255,255,.8); font-size:14px; }
+    select, input[type="checkbox"]{ accent-color: white; }
     select{
-      background:rgba(0,0,0,.18);
-      color:var(--text);
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:8px 10px;
-      font-size:14px;
-      outline:none;
+      background:rgba(0,0,0,0.3); color:var(--text); border:1px solid var(--border);
+      border-radius:10px; padding:6px; outline:none;
     }
-    .fieldSmall{
-      grid-column: span 4;
+    .fieldSmall{ grid-column: span 4; }
+    .fieldWide{ grid-column: span 12; justify-content:flex-start; gap:10px; }
+    .footer{ text-align:center; color:rgba(255,255,255,.4); font-size:12px; }
+    .hidden{ display:none; }
+    @media (max-width: 720px){
+      .field{ grid-column: span 12; }
+      .hint{ text-align:left; }
     }
-    .fieldWide{
-      grid-column: span 1
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="card top">
+      <h1>🎵 Bass Practice</h1>
+      <div class="hint">
+        <div><b>Espace</b> : Nouveau • <b>F</b> : Plein écran</div>
+        <div><b>S</b> : Réglages</div>
+      </div>
+    </div>
+
+    <div class="card center">
+      <div class="label">Tonalité</div>
+      <div class="key" id="key">—</div>
+      
+      <div class="label" style="margin-top:18px;">Progression</div>
+      <div class="prog" id="prog">—</div>
+      <div class="sub" id="sub">Clique sur "Nouvel exercice" pour commencer</div>
+
+      <div class="buttons">
+        <button id="next">Nouvel exercice</button>
+        <button id="toggle">Réglages</button>
+        <button id="fs">Plein écran</button>
+      </div>
+
+      <div class="pillrow" id="pills"></div>
+
+      <div class="instructions">
+        <div class="label">Consignes de pratique</div>
+        <ul class="instructions-list">
+          <li><b>A</b> <span>Trouver toutes les positions de la tonique sur le manche.</span></li>
+          <li><b>B</b> <span>Dire à voix haute chaque note de la gamme.</span></li>
+          <li><b>C</b> <span>Jouer les triades des accords (selon s'ils sont mineurs ou majeurs).</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card hidden" id="settingsCard">
+      <div class="settingsHeader">
+        <h2>Réglages de l'exercice</h2>
+      </div>
+      <div class="settings">
+        <div class="grid">
+          <div class="field">
+            <span>Qualité</span>
+            <select id="quality">
+              <option value="both">Majeur + mineur</option>
+              <option value="major">Majeur seulement</option>
+              <option value="minor">Mineur seulement</option>
+            </select>
+          </div>
+          <div class="field">
+            <span>Accidentels</span>
+            <select id="acc">
+              <option value="both">♭ + ♯</option>
+              <option value="flats">♭ seulement</option>
+              <option value="sharps">♯ seulement</option>
+            </select>
+          </div>
+          <div class="field fieldSmall">
+            <span>Style</span>
+            <select id="style">
+              <option value="mixed">Mix</option>
+              <option value="pop">Pop</option>
+              <option value="jazz">Jazz</option>
+              <option value="minor">Mineur</option>
+              <option value="classic">Classique</option>
+            </select>
+          </div>
+          <div class="field fieldSmall">
+            <span>Longueur</span>
+            <select id="len">
+              <option value="any">Auto</option>
+              <option value="3">3 accords</option>
+              <option value="4">4 accords</option>
+            </select>
+          </div>
+          <div class="field fieldSmall">
+            <span>Tags</span>
+            <input id="tags" type
