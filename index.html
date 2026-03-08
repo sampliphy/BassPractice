@@ -227,6 +227,7 @@ Astuce : mets cette page en favori — elle fonctionne hors ligne.
 
 const KEYS_FLATS=["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
 const KEYS_SHARPS=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+const EASY_KEYS = ["C","D","E","F","G","A","B","Bb","Eb","Ab"];
 
 const PROG=[
 { name:"Pop", rn:["I","V","vi","IV"] },
@@ -245,11 +246,19 @@ return k.replace("b","♭").replace("#","♯");
 function getKeyPool(){
 
 const acc=document.getElementById("acc").value;
+const easy=document.getElementById("easy").value;
 
-if(acc==="flats") return KEYS_FLATS;
-if(acc==="sharps") return KEYS_SHARPS;
+let pool;
 
-return [...new Set([...KEYS_FLATS,...KEYS_SHARPS])];
+if(acc==="flats") pool = KEYS_FLATS;
+else if(acc==="sharps") pool = KEYS_SHARPS;
+else pool = [...new Set([...KEYS_FLATS,...KEYS_SHARPS])];
+
+if(easy==="on"){
+pool = pool.filter(k => EASY_KEYS.includes(k));
+}
+
+return pool;
 }
 
 function getQuality(){
@@ -309,4 +318,5 @@ generate();
 
 </body>
 </html>
+
 
