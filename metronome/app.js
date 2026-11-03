@@ -16,14 +16,14 @@ function update() {
   controls.omissions.max = config.total;
   controls.omissions.value = config.omissions;
   $('tempo-unit').textContent = signature === 4 ? 'BPM · NOIRE' : 'BPM · NOIRE POINTÉE';
-  $('pattern-summary').textContent = `${config.omissions} tic${config.omissions > 1 ? 's' : ''} silencieux sur ${config.total}, répartis au hasard à chaque cycle.`;
+  $('pattern-summary').textContent = `${config.omissions} silence${config.omissions > 1 ? 's' : ''} sur ${config.total} tics · aléatoire`;
   $('beats').replaceChildren(...Array.from({ length: signature }, (_, i) => {
     const beat = document.createElement('span');
     beat.className = 'beat' + (i === 0 ? ' first' : '');
     beat.setAttribute('aria-hidden', 'true');
     return beat;
   }));
-  $('beat-caption').textContent = controls.visual.checked ? 'Les repères restent visibles, même pendant les tics silencieux.' : 'Une mesure de départ, puis faites confiance à votre oreille.';
+  $('beat-caption').textContent = controls.visual.checked ? 'Repères visibles pendant les silences.' : '1 mesure de départ.';
 }
 function randomPattern(total, omissions) {
   const indices = Array.from({ length: total }, (_, i) => i);
@@ -51,7 +51,7 @@ function scheduleVisual(time, beat, isCountIn, token) {
   const timeout = setTimeout(() => {
     visualTimers.delete(timeout);
     if (!playing || generation !== token) return;
-    $('status').textContent = isCountIn ? 'Mesure de départ' : 'À vous de garder le rythme';
+    $('status').textContent = isCountIn ? 'Mesure de départ' : 'En cours';
     [...$('beats').children].forEach((element, index) => element.classList.toggle('active', (controls.visual.checked || isCountIn) && index === beat));
   }, Math.max(0, (time - context.currentTime) * 1000));
   visualTimers.add(timeout);
